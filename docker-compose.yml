@@ -1,3 +1,5 @@
+# MySQL w kontenerze nasłuchuje wewnętrznie na 3306.
+# Na hoście mapujemy 3307 -> 3306, żeby nie kolidować z lokalnym MySQL / innymi usługami zajmującymi port 3306 (Windows).
 services:
   mysql:
     image: mysql:8.0
@@ -7,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: YPNNVb2p.p
       MYSQL_DATABASE: socialmgmt
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci

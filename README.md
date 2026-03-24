@@ -42,7 +42,16 @@ Projekt używa **npm workspaces**: instalacja z katalogu głównego (`npm instal
    docker compose up -d
    ```
 
-4. Skonfiguruj **`server/.env`** (wzoruj się na istniejących zmiennych): `DATABASE_URL`, `JWT_SECRET`, opcjonalnie `TOKEN_ENCRYPTION_KEY` (szyfrowanie tokenów Meta w DB — patrz [Bezpieczeństwo](#bezpieczeństwo)), `CLIENT_URL`, dane aplikacji Meta (`FACEBOOK_*`) jeśli używasz OAuth.
+   W `docker-compose.yml` MySQL z kontenera jest wystawione na hoście pod **`localhost:3307`** (mapowanie `3307:3306`), żeby **nie zajmować portu 3306** — na Windowsie często działa już osobna instalacja MySQL / XAMPP / inny Docker i wtedy pojawia się błąd `bind: ... 3306 ... Only one usage`.
+
+4. Skonfiguruj **`server/.env`**. Minimalnie:
+   - **`DATABASE_URL`** — połączenie z bazą z kroku 3, np. (hasło i port jak w `docker-compose.yml`):
+
+     ```env
+     DATABASE_URL="mysql://root:YPNNVb2p.p@localhost:3307/socialmgmt"
+     ```
+
+   - **`JWT_SECRET`**, opcjonalnie **`TOKEN_ENCRYPTION_KEY`** (szyfrowanie tokenów Meta w DB — patrz [Bezpieczeństwo](#bezpieczeństwo)), **`CLIENT_URL`**, dane aplikacji Meta (`FACEBOOK_*`) jeśli używasz OAuth.
 
 5. Wygeneruj klienta Prisma i zastosuj migracje:
 
@@ -214,6 +223,11 @@ Równoważnie: `npm run db:studio -w server` albo `cd server && npx prisma studi
 ### Sesja w przeglądarce
 
 - Token panelu jest przechowywany w **localStorage** (`sm_token`). Utrzymuj aktualne zależności i unikaj XSS (np. nie wstrzykuj nieufnego HTML do DOM).
+
+## Rozwiązywanie problemów: Docker i MySQL
+
+- **`ports are not available` / `bind` na porcie 3306** — na hoście działa już inna usługa na **3306** (np. systemowy MySQL, XAMPP, MariaDB). W repozytorium Docker mapuje kontener na **`localhost:3307`** (`3307:3306` w `docker-compose.yml`). Ustaw w `DATABASE_URL` port **3307** i zrestartuj kontener po `git pull`: `docker compose down` → `docker compose up -d`.
+- Jeśli **wolisz port 3306** i masz pewność, że nic na nim nie nasłuchuje, możesz w lokalnym `docker-compose.yml` (nie commituj, jeśli to tylko u Ciebie) przywrócić `"3306:3306"`.
 
 ## Uwagi
 
