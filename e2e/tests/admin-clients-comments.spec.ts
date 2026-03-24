@@ -2,11 +2,7 @@ import { test, expect } from "@playwright/test";
 
 const E2E_CLIENT_NAME = "Firma E2E Playwright";
 
-async function loginViaUi(
-  page: import("@playwright/test").Page,
-  email: string,
-  password: string,
-) {
+async function loginViaUi(page: import("@playwright/test").Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByTestId("login-email").fill(email);
   await page.getByTestId("login-password").fill(password);
@@ -79,11 +75,7 @@ test.describe("Panel — Klienci i komentarze", () => {
     await page.getByTestId("clients-search-input").fill(E2E_CLIENT_NAME);
     await expect(page.getByRole("gridcell", { name: E2E_CLIENT_NAME })).toBeVisible({ timeout: 15_000 });
 
-    await page
-      .getByRole("row")
-      .filter({ hasText: E2E_CLIENT_NAME })
-      .getByRole("link", { name: "Profil" })
-      .click();
+    await page.getByRole("row").filter({ hasText: E2E_CLIENT_NAME }).getByRole("link", { name: "Profil" }).click();
     await expect(page).toHaveURL(/\/clients\/\d+/);
 
     await page.getByTestId("client-tab-content-manager").click();
@@ -106,11 +98,7 @@ test.describe("Panel — Klienci i komentarze", () => {
     await page.getByTestId("clients-search-input").fill(E2E_CLIENT_NAME);
     await expect(page.getByRole("gridcell", { name: E2E_CLIENT_NAME })).toBeVisible({ timeout: 15_000 });
 
-    await page
-      .getByRole("row")
-      .filter({ hasText: E2E_CLIENT_NAME })
-      .getByRole("link", { name: "Profil" })
-      .click();
+    await page.getByRole("row").filter({ hasText: E2E_CLIENT_NAME }).getByRole("link", { name: "Profil" }).click();
 
     await page.getByTestId("client-tab-content-manager").click();
     await page.getByTestId("feed-manage-comments-button").click();

@@ -1,14 +1,4 @@
-import {
-  Alert,
-  Box,
-  Switch,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Switch, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { ApiError, apiJson } from "../../lib/api";
 
@@ -81,7 +71,9 @@ export function ClientAdsTab({ clientId, onMetaAuthRequired }: Props) {
         </Alert>
       )}
       {campaigns.length === 0 ? (
-        <Typography color="text.secondary">Brak kampanii do wyświetlenia (sprawdź konto reklamowe i uprawnienia Marketing API).</Typography>
+        <Typography color="text.secondary">
+          Brak kampanii do wyświetlenia (sprawdź konto reklamowe i uprawnienia Marketing API).
+        </Typography>
       ) : (
         <Table size="small">
           <TableHead>

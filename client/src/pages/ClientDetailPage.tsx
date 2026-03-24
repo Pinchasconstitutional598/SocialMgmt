@@ -35,11 +35,13 @@ export function ClientDetailPage() {
   }, []);
 
   useEffect(() => {
-    if (connected === "1") {
+    if (connected !== "1") return;
+    const next = new URLSearchParams(searchParams);
+    next.delete("connected");
+    queueMicrotask(() => {
       setSnack("Połączono z Meta — konta zapisane.");
-      searchParams.delete("connected");
-      setSearchParams(searchParams, { replace: true });
-    }
+      setSearchParams(next, { replace: true });
+    });
   }, [connected, searchParams, setSearchParams]);
 
   useEffect(() => {

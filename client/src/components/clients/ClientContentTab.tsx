@@ -49,8 +49,24 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
     setLoading(true);
     try {
       const data = await apiJson<{
-        facebook: Array<{ socialAccountId: number; pageId: string; posts: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string }> }>;
-        instagram: Array<{ socialAccountId: number; igUserId: string; media: Array<{ id: string; caption?: string; media_type?: string; media_url?: string; permalink?: string; timestamp?: string; thumbnail_url?: string }> }>;
+        facebook: Array<{
+          socialAccountId: number;
+          pageId: string;
+          posts: Array<{ id: string; message?: string; created_time?: string; permalink_url?: string }>;
+        }>;
+        instagram: Array<{
+          socialAccountId: number;
+          igUserId: string;
+          media: Array<{
+            id: string;
+            caption?: string;
+            media_type?: string;
+            media_url?: string;
+            permalink?: string;
+            timestamp?: string;
+            thumbnail_url?: string;
+          }>;
+        }>;
       }>(`/api/clients/${clientId}/meta/feed`);
 
       const items: FeedItem[] = [];
@@ -183,12 +199,30 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
         Publikacja
       </Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 3, alignItems: "flex-end" }}>
-        <TextField select label="Platforma" value={publishPlatform} onChange={(e) => setPublishPlatform(e.target.value as "facebook" | "instagram")} sx={{ minWidth: 200 }}>
+        <TextField
+          select
+          label="Platforma"
+          value={publishPlatform}
+          onChange={(e) => setPublishPlatform(e.target.value as "facebook" | "instagram")}
+          sx={{ minWidth: 200 }}
+        >
           <MenuItem value="facebook">Facebook</MenuItem>
           <MenuItem value="instagram">Instagram (wymaga obrazu)</MenuItem>
         </TextField>
-        <TextField label="Treść" value={publishMsg} onChange={(e) => setPublishMsg(e.target.value)} sx={{ flex: 1, minWidth: 200 }} multiline maxRows={3} />
-        <TextField label="URL obrazu (HTTPS, publiczny)" value={publishImage} onChange={(e) => setPublishImage(e.target.value)} sx={{ flex: 1, minWidth: 200 }} />
+        <TextField
+          label="Treść"
+          value={publishMsg}
+          onChange={(e) => setPublishMsg(e.target.value)}
+          sx={{ flex: 1, minWidth: 200 }}
+          multiline
+          maxRows={3}
+        />
+        <TextField
+          label="URL obrazu (HTTPS, publiczny)"
+          value={publishImage}
+          onChange={(e) => setPublishImage(e.target.value)}
+          sx={{ flex: 1, minWidth: 200 }}
+        />
         <Button variant="contained" onClick={() => void publish()} disabled={publishing || !publishMsg.trim()}>
           Opublikuj
         </Button>
@@ -217,7 +251,17 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
           ) : (
             <List dense>
               {comments.map((c) => (
-                <ListItem key={c.id} alignItems="flex-start" sx={{ flexDirection: "column", alignItems: "stretch", borderBottom: 1, borderColor: "divider", py: 2 }}>
+                <ListItem
+                  key={c.id}
+                  alignItems="flex-start"
+                  sx={{
+                    flexDirection: "column",
+                    alignItems: "stretch",
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    py: 2,
+                  }}
+                >
                   <ListItemText
                     primary={c.from?.name ?? "Użytkownik"}
                     secondary={

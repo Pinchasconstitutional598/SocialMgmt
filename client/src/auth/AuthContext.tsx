@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { apiJson, getToken, setToken, type PanelRole } from "../lib/api";
 
 export type AuthUser = {
@@ -44,22 +36,12 @@ function decodeUserFromJwt(token: string): AuthUser | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [token, setTok] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
+  const [token, setTok] = useState<string | null>(() => getToken());
+  const [user, setUser] = useState<AuthUser | null>(() => {
     const t = getToken();
-    if (!t) {
-      setTok(null);
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-    setTok(t);
-    setUser(decodeUserFromJwt(t));
-    setLoading(false);
-  }, []);
+    return t ? decodeUserFromJwt(t) : null;
+  });
+  const [loading] = useState(false);
 
   const login = useCallback(async (email: string, password: string) => {
     const data = await apiJson<{ token: string; user: AuthUser }>("/api/auth/login", {
@@ -102,6 +84,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/** Hook poza tym plikiem — wyłączenie reguły fast-refresh dla eksportu pomocniczego. */
+// eslint-disable-next-line react-refresh/only-export-components -- useAuth musi widzieć kontekst z tego modułu
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth outside AuthProvider");

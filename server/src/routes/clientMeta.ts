@@ -171,9 +171,7 @@ router.get("/comments", async (req, res) => {
     res.status(404).json({ error: "Klient nie znaleziony" });
     return;
   }
-  const token = client.socialAccounts.find(
-    (s: SocialAccount) => s.platform === platform && s.accessToken,
-  )?.accessToken;
+  const token = client.socialAccounts.find((s: SocialAccount) => s.platform === platform && s.accessToken)?.accessToken;
   if (!token) {
     res.status(400).json({ error: "Brak tokenu dla tej platformy" });
     return;
@@ -202,9 +200,7 @@ router.post("/comment", async (req, res) => {
     res.status(404).json({ error: "Klient nie znaleziony" });
     return;
   }
-  const token = client.socialAccounts.find(
-    (s: SocialAccount) => s.platform === platform && s.accessToken,
-  )?.accessToken;
+  const token = client.socialAccounts.find((s: SocialAccount) => s.platform === platform && s.accessToken)?.accessToken;
   if (!token) {
     res.status(400).json({ error: "Brak tokenu dla tej platformy" });
     return;
@@ -237,9 +233,7 @@ router.delete("/comment/:commentId", async (req, res) => {
     res.status(404).json({ error: "Klient nie znaleziony" });
     return;
   }
-  const token = client.socialAccounts.find(
-    (s: SocialAccount) => s.platform === platform && s.accessToken,
-  )?.accessToken;
+  const token = client.socialAccounts.find((s: SocialAccount) => s.platform === platform && s.accessToken)?.accessToken;
   if (!token) {
     res.status(400).json({ error: "Brak tokenu dla tej platformy" });
     return;

@@ -1,13 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { apiJson } from "../lib/api";
@@ -90,7 +82,14 @@ export function AddClientDialog({ open, onClose, onCreated }: Props) {
             name="status"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="Status" fullWidth select error={!!errors.status} helperText={errors.status?.message}>
+              <TextField
+                {...field}
+                label="Status"
+                fullWidth
+                select
+                error={!!errors.status}
+                helperText={errors.status?.message}
+              >
                 <MenuItem value="active">Aktywny</MenuItem>
                 <MenuItem value="inactive">Nieaktywny</MenuItem>
                 <MenuItem value="lead">Lead</MenuItem>

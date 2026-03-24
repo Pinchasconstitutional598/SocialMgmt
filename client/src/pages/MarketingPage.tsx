@@ -6,7 +6,9 @@ export function MarketingPage() {
       <Typography variant="h5" gutterBottom>
         Reklamy (Marketing API)
       </Typography>
-      <Typography color="text.secondary">Integracja z Meta Marketing API — miejsce na kampanie i zestawienia.</Typography>
+      <Typography color="text.secondary">
+        Integracja z Meta Marketing API — miejsce na kampanie i zestawienia.
+      </Typography>
     </Paper>
   );
 }

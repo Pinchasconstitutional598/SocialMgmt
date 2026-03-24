@@ -13,11 +13,7 @@ router.get("/", async (req, res) => {
   const where =
     search.length > 0
       ? {
-          OR: [
-            { name: { contains: search } },
-            { email: { contains: search } },
-            { industry: { contains: search } },
-          ],
+          OR: [{ name: { contains: search } }, { email: { contains: search } }, { industry: { contains: search } }],
         }
       : {};
 

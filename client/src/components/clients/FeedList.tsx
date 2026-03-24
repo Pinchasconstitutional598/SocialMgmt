@@ -1,13 +1,5 @@
 import { ChatBubbleOutline as CommentIcon } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 
 export type FeedItem =
   | {
@@ -47,7 +39,12 @@ export function FeedList({ items, onManageComments }: Props) {
       {items.map((item) => (
         <Card key={`${item.kind}-${item.id}`} variant="outlined">
           {item.kind === "instagram" && (item.thumbnail_url || item.media_url) && item.media_type !== "VIDEO" && (
-            <CardMedia component="img" height="200" image={item.thumbnail_url ?? item.media_url} sx={{ objectFit: "cover" }} />
+            <CardMedia
+              component="img"
+              height="200"
+              image={item.thumbnail_url ?? item.media_url}
+              sx={{ objectFit: "cover" }}
+            />
           )}
           {item.kind === "instagram" && item.media_type === "VIDEO" && item.thumbnail_url && (
             <CardMedia component="img" height="200" image={item.thumbnail_url} sx={{ objectFit: "cover" }} />
@@ -57,7 +54,7 @@ export function FeedList({ items, onManageComments }: Props) {
               {item.kind === "facebook" ? "Facebook" : "Instagram"} · {item.id}
             </Typography>
             <Typography variant="body1" sx={{ mt: 1, whiteSpace: "pre-wrap" }}>
-              {item.kind === "facebook" ? item.message ?? "—" : item.caption ?? "—"}
+              {item.kind === "facebook" ? (item.message ?? "—") : (item.caption ?? "—")}
             </Typography>
             <Typography variant="caption" display="block" sx={{ mt: 1 }}>
               {item.kind === "facebook" ? item.created_time : item.timestamp}

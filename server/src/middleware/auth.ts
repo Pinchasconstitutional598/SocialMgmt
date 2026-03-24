@@ -21,11 +21,7 @@ function getJwtSecret(): string {
 }
 
 export function signToken(payload: AuthPayload): string {
-  return jwt.sign(
-    { sub: payload.sub, email: payload.email, role: payload.role },
-    getJwtSecret(),
-    { expiresIn: "7d" },
-  );
+  return jwt.sign({ sub: payload.sub, email: payload.email, role: payload.role }, getJwtSecret(), { expiresIn: "7d" });
 }
 
 export function verifyToken(token: string): AuthPayload {

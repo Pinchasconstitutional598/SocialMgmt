@@ -1,14 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Paper,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Container, Paper, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
@@ -75,7 +65,14 @@ export function LoginPage() {
             {error}
           </Alert>
         )}
-        <Box component="form" onSubmit={(e) => { e.preventDefault(); void submit(); }} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void submit();
+          }}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
           <TextField
             label="Email"
             type="email"

@@ -53,7 +53,10 @@ export function AdministrationPage() {
   }, []);
 
   useEffect(() => {
-    void load();
+    const id = window.setTimeout(() => {
+      void load();
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [load]);
 
   const { register, handleSubmit, reset } = useForm<FormAdd>({
@@ -137,7 +140,12 @@ export function AdministrationPage() {
           <DialogTitle>Nowy użytkownik panelu</DialogTitle>
           <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
             <TextField label="Email" fullWidth {...register("email", { required: true })} />
-            <TextField label="Hasło" type="password" fullWidth {...register("password", { required: true, minLength: 8 })} />
+            <TextField
+              label="Hasło"
+              type="password"
+              fullWidth
+              {...register("password", { required: true, minLength: 8 })}
+            />
             <TextField label="Rola" select fullWidth {...register("role")}>
               <MenuItem value="ADMINISTRATOR">Administrator</MenuItem>
               <MenuItem value="MARKETING">Marketing</MenuItem>

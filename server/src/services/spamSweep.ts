@@ -1,11 +1,5 @@
 import { prisma } from "../lib/prisma";
-import {
-  MetaApiError,
-  deleteComment,
-  getInstagramMedia,
-  getObjectComments,
-  getPageFeed,
-} from "./metaGraph";
+import { MetaApiError, deleteComment, getInstagramMedia, getObjectComments, getPageFeed } from "./metaGraph";
 
 function containsBannedWord(text: string, words: string[]): boolean {
   const lower = text.toLowerCase();
@@ -60,9 +54,7 @@ export async function runGlobalSpamSweep(): Promise<SpamSweepResult> {
                   await deleteComment(c.id, token);
                   result.commentsDeleted += 1;
                 } catch (e) {
-                  result.errors.push(
-                    `FB delete ${c.id}: ${e instanceof Error ? e.message : String(e)}`,
-                  );
+                  result.errors.push(`FB delete ${c.id}: ${e instanceof Error ? e.message : String(e)}`);
                 }
               }
             }
@@ -79,9 +71,7 @@ export async function runGlobalSpamSweep(): Promise<SpamSweepResult> {
                   await deleteComment(c.id, token);
                   result.commentsDeleted += 1;
                 } catch (e) {
-                  result.errors.push(
-                    `IG delete ${c.id}: ${e instanceof Error ? e.message : String(e)}`,
-                  );
+                  result.errors.push(`IG delete ${c.id}: ${e instanceof Error ? e.message : String(e)}`);
                 }
               }
             }
@@ -91,9 +81,7 @@ export async function runGlobalSpamSweep(): Promise<SpamSweepResult> {
         if (e instanceof MetaApiError && e.tokenExpired) {
           result.errors.push(`Token wygasł (client ${client.id}, ${sa.platform})`);
         } else {
-          result.errors.push(
-            `Client ${client.id} ${sa.platform}: ${e instanceof Error ? e.message : String(e)}`,
-          );
+          result.errors.push(`Client ${client.id} ${sa.platform}: ${e instanceof Error ? e.message : String(e)}`);
         }
       }
     }

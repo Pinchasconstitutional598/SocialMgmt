@@ -11,6 +11,7 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "test": "jest --config jest.config.cjs",
+    "test:unit": "jest --config jest.config.cjs --testPathIgnorePatterns=integration",
     "test:integration": "jest --config jest.config.cjs --testPathPatterns=integration"
   },
   "keywords": [],

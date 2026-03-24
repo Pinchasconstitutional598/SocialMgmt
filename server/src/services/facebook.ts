@@ -22,10 +22,7 @@ export function getFacebookScopes(): string {
   ].join(",");
 }
 
-export async function exchangeCodeForShortLivedToken(
-  code: string,
-  redirectUri: string,
-): Promise<TokenResponse> {
+export async function exchangeCodeForShortLivedToken(code: string, redirectUri: string): Promise<TokenResponse> {
   const appId = process.env.FACEBOOK_APP_ID;
   const appSecret = process.env.FACEBOOK_APP_SECRET;
   if (!appId || !appSecret) throw new Error("FACEBOOK_APP_ID / FACEBOOK_APP_SECRET not configured");
@@ -45,9 +42,7 @@ export async function exchangeCodeForShortLivedToken(
   return data;
 }
 
-export async function exchangeShortLivedForLongLivedUserToken(
-  shortLivedUserToken: string,
-): Promise<TokenResponse> {
+export async function exchangeShortLivedForLongLivedUserToken(shortLivedUserToken: string): Promise<TokenResponse> {
   const appId = process.env.FACEBOOK_APP_ID;
   const appSecret = process.env.FACEBOOK_APP_SECRET;
   if (!appId || !appSecret) throw new Error("FACEBOOK_APP_ID / FACEBOOK_APP_SECRET not configured");

@@ -19,15 +19,12 @@ describe("API integracyjne — /api/clients", () => {
 
   it("POST /api/clients zapisuje klienta w MySQL z poprawnymi polami", async () => {
     const email = `firm-${Date.now()}@integration.test`;
-    const res = await request(app)
-      .post("/api/clients")
-      .set(authHeaders)
-      .send({
-        name: "Firma Testowa Sp. z o.o.",
-        email,
-        industry: "IT",
-        status: "active",
-      });
+    const res = await request(app).post("/api/clients").set(authHeaders).send({
+      name: "Firma Testowa Sp. z o.o.",
+      email,
+      industry: "IT",
+      status: "active",
+    });
 
     expect(res.status).toBe(201);
     expect(res.body.name).toBe("Firma Testowa Sp. z o.o.");
@@ -55,11 +52,13 @@ describe("API integracyjne — /api/clients", () => {
   });
 
   it("POST /api/clients bez autoryzacji zwraca 401", async () => {
-    const res = await request(app).post("/api/clients").send({
-      name: "X",
-      email: `noauth-${Date.now()}@integration.test`,
-      status: "active",
-    });
+    const res = await request(app)
+      .post("/api/clients")
+      .send({
+        name: "X",
+        email: `noauth-${Date.now()}@integration.test`,
+        status: "active",
+      });
 
     expect(res.status).toBe(401);
   });

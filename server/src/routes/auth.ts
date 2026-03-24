@@ -104,37 +104,33 @@ router.post("/login", async (req, res) => {
 });
 
 /** Zwraca URL do przekierowania użytkownika do Facebook OAuth */
-router.post(
-  "/facebook/connect",
-  authMiddleware,
-  (req, res) => {
-    const auth = req.auth!;
-    const clientId = Number((req.body as { clientId?: number }).clientId);
-    if (!Number.isFinite(clientId)) {
-      res.status(400).json({ error: "clientId jest wymagane" });
-      return;
-    }
+router.post("/facebook/connect", authMiddleware, (req, res) => {
+  const auth = req.auth!;
+  const clientId = Number((req.body as { clientId?: number }).clientId);
+  if (!Number.isFinite(clientId)) {
+    res.status(400).json({ error: "clientId jest wymagane" });
+    return;
+  }
 
-    const appId = process.env.FACEBOOK_APP_ID;
-    if (!appId) {
-      res.status(503).json({ error: "Facebook OAuth nie jest skonfigurowany (FACEBOOK_APP_ID)" });
-      return;
-    }
+  const appId = process.env.FACEBOOK_APP_ID;
+  if (!appId) {
+    res.status(503).json({ error: "Facebook OAuth nie jest skonfigurowany (FACEBOOK_APP_ID)" });
+    return;
+  }
 
-    const state = signOAuthState({ clientId, sub: auth.sub });
-    const redirectUri = encodeURIComponent(getRedirectUri());
-    const scope = encodeURIComponent(getFacebookScopes());
-    const url =
-      `https://www.facebook.com/${process.env.FACEBOOK_API_VERSION ?? "v21.0"}/dialog/oauth` +
-      `?client_id=${encodeURIComponent(appId)}` +
-      `&redirect_uri=${redirectUri}` +
-      `&state=${encodeURIComponent(state)}` +
-      `&scope=${scope}` +
-      `&response_type=code`;
+  const state = signOAuthState({ clientId, sub: auth.sub });
+  const redirectUri = encodeURIComponent(getRedirectUri());
+  const scope = encodeURIComponent(getFacebookScopes());
+  const url =
+    `https://www.facebook.com/${process.env.FACEBOOK_API_VERSION ?? "v21.0"}/dialog/oauth` +
+    `?client_id=${encodeURIComponent(appId)}` +
+    `&redirect_uri=${redirectUri}` +
+    `&state=${encodeURIComponent(state)}` +
+    `&scope=${scope}` +
+    `&response_type=code`;
 
-    res.json({ url });
-  },
-);
+  res.json({ url });
+});
 
 /**
  * Callback OAuth Meta — musi być zgodny z FACEBOOK_REDIRECT_URI w aplikacji Facebook.
@@ -170,9 +166,7 @@ router.get("/facebook", async (req, res) => {
     const redirectUri = getRedirectUri();
     const short = await exchangeCodeForShortLivedToken(code, redirectUri);
     const longUser = await exchangeShortLivedForLongLivedUserToken(short.access_token);
-    const expiresAt = longUser.expires_in
-      ? new Date(Date.now() + longUser.expires_in * 1000)
-      : null;
+    const expiresAt = longUser.expires_in ? new Date(Date.now() + longUser.expires_in * 1000) : null;
 
     const pages = await fetchUserPages(longUser.access_token);
 

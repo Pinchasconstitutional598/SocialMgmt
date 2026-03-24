@@ -72,7 +72,13 @@ export function ClientSocialTab({ clientId, onMetaAuthRequired }: Props) {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Button variant="contained" startIcon={<FacebookIcon />} onClick={() => void connectFacebook()} disabled={connecting} sx={{ mr: 1 }}>
+        <Button
+          variant="contained"
+          startIcon={<FacebookIcon />}
+          onClick={() => void connectFacebook()}
+          disabled={connecting}
+          sx={{ mr: 1 }}
+        >
           Połącz Facebook / Instagram
         </Button>
         <Button component={Link} to="/settings" size="small">
@@ -85,13 +91,28 @@ export function ClientSocialTab({ clientId, onMetaAuthRequired }: Props) {
       ) : (
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
           {cards.map((c) => (
-            <Box key={`${c.platform}-${c.socialAccountId}`} sx={{ width: { xs: "100%", sm: "calc(50% - 8px)", md: "calc(33.33% - 11px)" } }}>
+            <Box
+              key={`${c.platform}-${c.socialAccountId}`}
+              sx={{ width: { xs: "100%", sm: "calc(50% - 8px)", md: "calc(33.33% - 11px)" } }}
+            >
               <Card variant="outlined" sx={{ height: "100%" }}>
                 {c.pictureUrl ? (
                   <CardMedia component="img" height="140" image={c.pictureUrl} sx={{ objectFit: "cover" }} />
                 ) : (
-                  <Box sx={{ height: 140, bgcolor: "action.hover", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    {c.platform === "instagram" ? <InstagramIcon fontSize="large" color="action" /> : <FacebookIcon fontSize="large" color="primary" />}
+                  <Box
+                    sx={{
+                      height: 140,
+                      bgcolor: "action.hover",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {c.platform === "instagram" ? (
+                      <InstagramIcon fontSize="large" color="action" />
+                    ) : (
+                      <FacebookIcon fontSize="large" color="primary" />
+                    )}
                   </Box>
                 )}
                 <CardContent>

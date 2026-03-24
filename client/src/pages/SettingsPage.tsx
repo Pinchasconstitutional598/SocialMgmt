@@ -95,7 +95,8 @@ export function SettingsPage() {
             Global Spam Filter
           </Typography>
           <Typography variant="body2" color="text.secondary" paragraph>
-            Lista zakazanych słów (dopasowanie podciągu, bez rozróżniania wielkości liter). Endpoint „spam sweep” skanuje feedy i usuwa pasujące komentarze przy użyciu zapisanych tokenów Meta.
+            Lista zakazanych słów (dopasowanie podciągu, bez rozróżniania wielkości liter). Endpoint „spam sweep”
+            skanuje feedy i usuwa pasujące komentarze przy użyciu zapisanych tokenów Meta.
           </Typography>
           <Box sx={{ display: "flex", gap: 1, mb: 2, flexWrap: "wrap" }}>
             <TextField size="small" label="Nowe słowo" value={newWord} onChange={(e) => setNewWord(e.target.value)} />

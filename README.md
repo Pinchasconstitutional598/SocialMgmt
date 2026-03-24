@@ -4,14 +4,14 @@ Monorepo aplikacji do zarządzania obecnością klientów w social media: integr
 
 ## Stack technologiczny
 
-| Warstwa | Technologie |
-|--------|-------------|
-| **Frontend** | React 19, Vite, TypeScript, Material UI (MUI), React Router, React Hook Form, Zod, MUI X Data Grid |
-| **Backend** | Node.js, Express 5, TypeScript, Prisma ORM |
-| **Baza danych** | MySQL 8 |
-| **Infra (lokalnie)** | Docker Compose (kontener MySQL) |
-| **Auth / integracje** | JWT (panel), OAuth Meta, Facebook Graph API, Marketing API |
-| **Testy** | Vitest (frontend), Jest + @swc/jest (backend), MSW 1.x (mock HTTP Graph API), Playwright (E2E) |
+| Warstwa               | Technologie                                                                                        |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
+| **Frontend**          | React 19, Vite, TypeScript, Material UI (MUI), React Router, React Hook Form, Zod, MUI X Data Grid |
+| **Backend**           | Node.js, Express 5, TypeScript, Prisma ORM                                                         |
+| **Baza danych**       | MySQL 8                                                                                            |
+| **Infra (lokalnie)**  | Docker Compose (kontener MySQL)                                                                    |
+| **Auth / integracje** | JWT (panel), OAuth Meta, Facebook Graph API, Marketing API                                         |
+| **Testy / jakość**    | Vitest, Jest + MSW, Playwright (E2E), ESLint (client), Prettier                                    |
 
 Struktura katalogów:
 
@@ -76,7 +76,7 @@ Frontend proxy przekierowuje `/api` na backend (patrz `client/vite.config.ts`).
 npm run build
 ```
 
-- `client/dist/` — statyczny frontend  
+- `client/dist/` — statyczny frontend
 - `server/dist/` — skompilowany backend (`npm run start -w server` po buildzie)
 
 ## Testy
@@ -91,10 +91,11 @@ Pełny cykl (najpierw backend Jest, potem client Vitest):
 npm test
 ```
 
-| Zakres | Komenda | Opis |
-|--------|---------|------|
-| **Backend (Jest)** | `npm run test -w server` | `server/src/**/*.test.ts` — m.in. `metaGraph` z mockami **MSW** (brak prawdziwych wywołań HTTP do Meta). |
-| **Frontend (Vitest)** | `npm run test -w client` | Pliki `*.test.ts` / `*.test.tsx` w `client/`. |
+| Zakres                | Komenda                  | Opis                                                                                                     |
+| --------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Backend (Jest)**    | `npm run test -w server` | `server/src/**/*.test.ts` — m.in. `metaGraph` z mockami **MSW** (brak prawdziwych wywołań HTTP do Meta). |
+| **Frontend (Vitest)** | `npm run test -w client` | Pliki `*.test.ts` / `*.test.tsx` w `client/`.                                                            |
+| **CI (bez MySQL)**    | `npm run test:ci`        | Jest bez folderu `integration/` + Vitest — używane w GitHub Actions.                                     |
 
 **Testy integracyjne API** ([Supertest](https://github.com/ladjs/supertest)): `server/src/integration/clients.integration.test.ts` — wymagają działającego MySQL (`DATABASE_URL` w `server/.env`). Sprawdzają m.in. `POST /api/clients`, walidację 401/400 oraz izolację `SocialAccount` między klientami.
 
@@ -130,13 +131,27 @@ npm run test:e2e:ui
 - `GET /api/health` jest publiczny (gotowość); Playwright czeka na ten endpoint przy starcie serwera.
 - Jeśli porty **3001** lub **5173** są zajęte przez stare procesy `dev`, zatrzymaj je albo pozwól Playwright na `reuseExistingServer` (domyślnie w dev), aby nie kolidować ze startem.
 
+### ESLint i Prettier
+
+| Komenda                | Opis                                               |
+| ---------------------- | -------------------------------------------------- |
+| `npm run lint`         | ESLint w pakiecie `client` (`eslint.config.js`).   |
+| `npm run format`       | Prettier — formatuje pliki w repozytorium.         |
+| `npm run format:check` | Prettier — tylko sprawdzenie (np. przed commitem). |
+
+Konfiguracja: `.prettierrc`, `.prettierignore` (m.in. `node_modules`, `dist`, `package-lock.json`).
+
+### CI (GitHub Actions)
+
+Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml): **Node.js 22** (nie 18.x), `npm ci`, `npm run db:generate`, `npm run lint -w client`, `npm run format:check`, `npm run build`, `npm run test:ci`. Testy integracyjne z MySQL nie są w tej konfiguracji — uruchamiaj je lokalnie (`npm run test:integration -w server`).
+
 ## Przydatne skrypty (workspace `server`)
 
-| Skrypt (z root) | Opis |
-|-----------------|------|
-| `npm run db:generate -w server` | `prisma generate` |
-| `npm run db:migrate -w server` | `prisma migrate dev` |
-| `npm run db:push -w server` | `prisma db push` |
+| Skrypt (z root)                 | Opis                 |
+| ------------------------------- | -------------------- |
+| `npm run db:generate -w server` | `prisma generate`    |
+| `npm run db:migrate -w server`  | `prisma migrate dev` |
+| `npm run db:push -w server`     | `prisma db push`     |
 
 ## Bezpieczeństwo
 
