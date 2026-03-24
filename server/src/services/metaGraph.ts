@@ -1,5 +1,7 @@
-const GRAPH_VERSION = process.env.GRAPH_API_VERSION ?? "v20.0";
-const BASE = `https://graph.facebook.com/${GRAPH_VERSION}`;
+function graphBaseUrl(): string {
+  const v = process.env.GRAPH_API_VERSION ?? "v20.0";
+  return `https://graph.facebook.com/${v}`;
+}
 
 export class MetaApiError extends Error {
   constructor(
@@ -17,7 +19,8 @@ export class MetaApiError extends Error {
 }
 
 function buildUrl(path: string, params: Record<string, string | number | undefined>): string {
-  const u = new URL(path.startsWith("http") ? path : `${BASE}${path.startsWith("/") ? "" : "/"}${path}`);
+  const base = graphBaseUrl();
+  const u = new URL(path.startsWith("http") ? path : `${base}${path.startsWith("/") ? "" : "/"}${path}`);
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined) u.searchParams.set(k, String(v));
   }
@@ -27,13 +30,53 @@ function buildUrl(path: string, params: Record<string, string | number | undefin
 async function graphJson<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
   const text = await res.text();
-  if (!text) return {} as T;
-  const data = JSON.parse(text) as T & { error?: { message: string; code: number; type?: string } };
+  let parsed: unknown = null;
+  if (text) {
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      if (!res.ok) {
+        throw new MetaApiError(text.slice(0, 500) || res.statusText, undefined, res.status);
+      }
+      throw new MetaApiError("Niepoprawna odpowiedź JSON z Graph API", undefined, res.status);
+    }
+  }
+  const data = (parsed ?? {}) as T & { error?: { message: string; code: number; type?: string } };
   if (data && typeof data === "object" && "error" in data && data.error) {
     const e = data.error;
     throw new MetaApiError(e.message ?? "Graph API error", e.code, res.status);
   }
-  return data;
+  if (!res.ok) {
+    throw new MetaApiError(`HTTP ${res.status}`, undefined, res.status);
+  }
+  return data as T;
+}
+
+/**
+ * Wymiana short-lived user token → long-lived (OAuth fb_exchange_token).
+ * Używa tego samego endpointu co Facebook Login; błędy 401/190 mapują na {@link MetaApiError}.
+ */
+export async function exchangeLongLivedUserToken(shortLivedUserToken: string): Promise<{
+  access_token: string;
+  token_type?: string;
+  expires_in?: number;
+}> {
+  const appId = process.env.FACEBOOK_APP_ID;
+  const appSecret = process.env.FACEBOOK_APP_SECRET;
+  if (!appId || !appSecret) {
+    throw new Error("FACEBOOK_APP_ID / FACEBOOK_APP_SECRET not configured");
+  }
+  const url = buildUrl(`/oauth/access_token`, {
+    grant_type: "fb_exchange_token",
+    client_id: appId,
+    client_secret: appSecret,
+    fb_exchange_token: shortLivedUserToken,
+  });
+  return graphJson<{
+    access_token: string;
+    token_type?: string;
+    expires_in?: number;
+  }>(url);
 }
 
 export async function getPageProfile(pageId: string, accessToken: string) {

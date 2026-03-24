@@ -11,6 +11,7 @@ Monorepo aplikacji do zarządzania obecnością klientów w social media: integr
 | **Baza danych** | MySQL 8 |
 | **Infra (lokalnie)** | Docker Compose (kontener MySQL) |
 | **Auth / integracje** | JWT (panel), OAuth Meta, Facebook Graph API, Marketing API |
+| **Testy** | Vitest (frontend), Jest + @swc/jest (backend), MSW 1.x (mock HTTP Graph API) |
 
 Struktura katalogów:
 
@@ -77,6 +78,25 @@ npm run build
 
 - `client/dist/` — statyczny frontend  
 - `server/dist/` — skompilowany backend (`npm run start -w server` po buildzie)
+
+## Testy
+
+Z katalogu głównego (najpierw `npm install`):
+
+```bash
+npm test
+```
+
+- **Client** (`client/`): **Vitest** — `npm run test -w client` (pliki `src/**/*.test.ts`).
+- **Server** (`server/`): **Jest** — `npm run test -w server`; mocki odpowiedzi Facebook Graph API przez **MSW** (`server/src/services/metaGraph.test.ts`).
+
+Testy `MetaGraphService` nie wykonują prawdziwych żądań HTTP — serwer MSW przechwytuje `fetch` w Node.
+
+**Testy integracyjne API** ([Supertest](https://github.com/ladjs/supertest)): `server/src/integration/clients.integration.test.ts` — wymagają działającego MySQL (`DATABASE_URL` w `server/.env`). Sprawdzają m.in. `POST /api/clients` (zapis w bazie), walidację 400 oraz izolację `SocialAccount` między klientami. Uruchomienie samych testów integracyjnych:
+
+```bash
+npm run test:integration -w server
+```
 
 ## Przydatne skrypty (workspace `server`)
 
