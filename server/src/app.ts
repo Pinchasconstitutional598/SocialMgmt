@@ -1,7 +1,9 @@
 import "dotenv/config";
+import { PanelRole } from "@prisma/client";
 import cors from "cors";
 import express from "express";
 import { prisma } from "./lib/prisma";
+import { authMiddleware, requireRole } from "./middleware/auth";
 import authRoutes from "./routes/auth";
 import clientMetaRoutes from "./routes/clientMeta";
 import clientsRoutes from "./routes/clients";
@@ -21,11 +23,12 @@ export function createApp() {
   );
   app.use(express.json());
 
+  /** Publiczny healthcheck (np. load balancer / Playwright); bez danych wrażliwych. */
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true });
   });
 
-  app.get("/api/db-check", async (_req, res) => {
+  app.get("/api/db-check", authMiddleware, requireRole(PanelRole.ADMINISTRATOR), async (_req, res) => {
     try {
       await prisma.$queryRaw`SELECT 1`;
       const clientCount = await prisma.client.count();

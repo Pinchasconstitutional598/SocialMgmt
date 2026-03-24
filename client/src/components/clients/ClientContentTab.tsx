@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuth } from "../../auth/AuthContext";
 import { ApiError, apiJson } from "../../lib/api";
 import { FeedList, type FeedItem } from "./FeedList";
 
@@ -28,6 +29,8 @@ type Props = {
 };
 
 export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
+  const { user } = useAuth();
+  const canDeleteComments = user?.role === "ADMINISTRATOR";
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -196,8 +199,13 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
       </Typography>
       <FeedList items={feedItems} onManageComments={(item) => void openComments(item)} />
 
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{ sx: { width: { xs: "100%", sm: 420 } } }}>
-        <Box sx={{ p: 2, width: "100%" }}>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{ sx: { width: { xs: "100%", sm: 420 } } }}
+      >
+        <Box data-testid="comments-drawer" sx={{ p: 2, width: "100%" }}>
           <Typography variant="h6" gutterBottom>
             {drawerTitle}
           </Typography>
@@ -232,9 +240,17 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
                     <Button size="small" variant="outlined" onClick={() => void reply(c.id)}>
                       Wyślij
                     </Button>
-                    <IconButton size="small" color="error" aria-label="Usuń" onClick={() => void remove(c.id)}>
-                      <DeleteIcon />
-                    </IconButton>
+                    {canDeleteComments && (
+                      <IconButton
+                        size="small"
+                        color="error"
+                        aria-label="Usuń"
+                        data-testid="comment-delete-button"
+                        onClick={() => void remove(c.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
                   </Box>
                 </ListItem>
               ))}

@@ -64,7 +64,12 @@ export function FeedList({ items, onManageComments }: Props) {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" startIcon={<CommentIcon />} onClick={() => onManageComments(item)}>
+            <Button
+              size="small"
+              startIcon={<CommentIcon />}
+              data-testid="feed-manage-comments-button"
+              onClick={() => onManageComments(item)}
+            >
               Zarządzaj komentarzami
             </Button>
             {item.kind === "facebook" && item.permalink_url && (

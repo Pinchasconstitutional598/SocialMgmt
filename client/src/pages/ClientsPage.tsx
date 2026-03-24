@@ -102,6 +102,7 @@ export function ClientsPage() {
       </Box>
       <TextField
         label="Szukaj (nazwa, email, branża)"
+        inputProps={{ "data-testid": "clients-search-input" }}
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);

@@ -76,7 +76,16 @@ export function LoginPage() {
           </Alert>
         )}
         <Box component="form" onSubmit={(e) => { e.preventDefault(); void submit(); }} sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required fullWidth autoComplete="email" />
+          <TextField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            fullWidth
+            autoComplete="email"
+            inputProps={{ "data-testid": "login-email" }}
+          />
           <TextField
             label="Hasło"
             type="password"
@@ -85,8 +94,9 @@ export function LoginPage() {
             required
             fullWidth
             autoComplete={showRegister && tab === 0 ? "new-password" : "current-password"}
+            inputProps={{ "data-testid": "login-password" }}
           />
-          <Button type="submit" variant="contained" size="large">
+          <Button type="submit" variant="contained" size="large" data-testid="login-submit">
             {showRegister && tab === 0 ? "Utwórz konto administratora" : "Zaloguj"}
           </Button>
         </Box>

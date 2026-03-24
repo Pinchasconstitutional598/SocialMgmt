@@ -86,7 +86,7 @@ export function ClientDetailPage() {
         <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable">
           <Tab label="Social Media" />
           <Tab label="Reklamy (Marketing API)" />
-          <Tab label="Content Manager" />
+          <Tab label="Content Manager" data-testid="client-tab-content-manager" />
         </Tabs>
       </Paper>
 
