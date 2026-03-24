@@ -81,6 +81,13 @@ Możesz je zmienić w `server/.env` przed seedem: `DEMO_ADMIN_EMAIL`, `DEMO_ADMI
 
 Skrypt znajduje się w **`server/prisma/seed.ts`**. W środowisku produkcyjnym **nie** używaj tych domyślnych haseł — ustaw własne konto lub zmień hasło zaraz po wdrożeniu.
 
+**„Nieprawidłowy email lub hasło” mimo seedu:**
+
+1. **`DATABASE_URL` w `server/.env`** musi wskazywać **tę samą bazę**, w której działał `npm run db:seed` (ten sam host, port, nazwa bazy). Inna instancja MySQL = inni użytkownicy — wtedy ponów seed po poprawieniu URL albo uruchom seed na właściwej bazie.
+2. Uruchom ponownie z katalogu głównego: `npm run db:seed` i sprawdź w konsoli komunikat `[seed] ... demo@socialmgmt.local`.
+3. W **`server/.env`** nie ustawiaj `DEMO_ADMIN_EMAIL` / `DEMO_ADMIN_PASSWORD` na przypadkowe wartości, jeśli logujesz się danymi z tabeli powyżej — albo usuń te zmienne (domyślne z README), albo loguj się **dokładnie** tym emailem i hasłem, które ustawiłeś.
+4. Hasło wpisuj **ręcznie** (czasem kopiowanie z PDF/markdown dodaje niewidoczne znaki). Ostatni znak to zwykły wykrzyknik `!` (ASCII).
+
 ## Uruchomienie (development)
 
 Z **katalogu głównego** — frontend i backend równolegle:
