@@ -2,6 +2,8 @@
   "name": "socialmgmt",
   "private": true,
   "description": "Monorepo: panel zarządzania social media (React + Express + Prisma)",
+  "author": "Maxsoft",
+  "license": "MIT",
   "workspaces": [
     "client",
     "server"

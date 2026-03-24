@@ -15,8 +15,8 @@
     "test:integration": "jest --config jest.config.cjs --testPathPatterns=integration"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Maxsoft",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "@prisma/client": "5.22.0",
