@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma";
 import { MetaApiError, deleteComment, getInstagramMedia, getObjectComments, getPageFeed } from "./metaGraph";
+import { markClientMetaConnectionExpired } from "./metaConnectionStatus";
 
 function containsBannedWord(text: string, words: string[]): boolean {
   const lower = text.toLowerCase();
@@ -79,6 +80,7 @@ export async function runGlobalSpamSweep(): Promise<SpamSweepResult> {
         }
       } catch (e) {
         if (e instanceof MetaApiError && e.tokenExpired) {
+          await markClientMetaConnectionExpired(client.id);
           result.errors.push(`Token wygasł (client ${client.id}, ${sa.platform})`);
         } else {
           result.errors.push(`Client ${client.id} ${sa.platform}: ${e instanceof Error ? e.message : String(e)}`);

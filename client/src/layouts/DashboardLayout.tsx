@@ -5,17 +5,22 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import {
   AppBar,
   Box,
   CssBaseline,
   Divider,
   Drawer,
+  FormControlLabel,
   IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Switch,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -24,6 +29,7 @@ import {
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useThemeMode } from "../theme/ThemeModeContext";
 
 const drawerWidth = 260;
 
@@ -31,6 +37,7 @@ const items: { to: string; label: string; icon: React.ReactNode; adminOnly?: boo
   { to: "/dashboard", label: "Dashboard", icon: <DashboardIcon /> },
   { to: "/clients", label: "Klienci", icon: <PeopleIcon /> },
   { to: "/marketing", label: "Reklamy (Marketing API)", icon: <CampaignIcon /> },
+  { to: "/ad-spend", label: "Ad Spend Overview", icon: <ShowChartIcon /> },
   { to: "/settings", label: "Ustawienia", icon: <SettingsIcon /> },
   { to: "/administration", label: "Administracja", icon: <AdminPanelSettingsIcon />, adminOnly: true },
 ];
@@ -41,6 +48,7 @@ export function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { mode, toggleMode } = useThemeMode();
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -126,9 +134,22 @@ export function DashboardLayout() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Panel administracyjny
           </Typography>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={mode === "dark"}
+                onChange={() => toggleMode()}
+                color="default"
+                icon={<LightModeIcon fontSize="small" />}
+                checkedIcon={<DarkModeIcon fontSize="small" />}
+              />
+            }
+            label={mode === "dark" ? "Ciemny" : "Jasny"}
+            sx={{ mr: 0, ml: 1 }}
+          />
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>

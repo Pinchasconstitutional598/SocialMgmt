@@ -5,9 +5,20 @@ import { authMiddleware } from "../middleware/auth";
 const router = Router();
 router.use(authMiddleware);
 
+function parsePage(q: unknown): number {
+  const n = typeof q === "string" || typeof q === "number" ? Number(q) : NaN;
+  return Number.isFinite(n) && n >= 1 ? Math.floor(n) : 1;
+}
+
+function parsePageSize(q: unknown): number {
+  const n = typeof q === "string" || typeof q === "number" ? Number(q) : NaN;
+  const raw = Number.isFinite(n) && n >= 1 ? Math.floor(n) : 25;
+  return Math.min(100, Math.max(5, raw));
+}
+
 router.get("/", async (req, res) => {
-  const page = Math.max(1, Number(req.query.page) || 1);
-  const pageSize = Math.min(100, Math.max(5, Number(req.query.pageSize) || 25));
+  const page = parsePage(req.query.page);
+  const pageSize = parsePageSize(req.query.pageSize);
   const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
 
   const where =
@@ -17,7 +28,8 @@ router.get("/", async (req, res) => {
         }
       : {};
 
-  const [total, rows] = await Promise.all([
+  // MySQL: Prisma mapuje `take` → LIMIT, `skip` → OFFSET (tylko żądana strona).
+  const [total, rawRows] = await Promise.all([
     prisma.client.count({ where }),
     prisma.client.findMany({
       where,
@@ -30,12 +42,24 @@ router.get("/", async (req, res) => {
         email: true,
         industry: true,
         status: true,
+        metaConnectionStatus: true,
+        _count: { select: { socialAccounts: true } },
       },
     }),
   ]);
 
+  const data = rawRows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    email: r.email,
+    industry: r.industry,
+    status: r.status,
+    metaConnectionStatus: r.metaConnectionStatus,
+    socialAccountsCount: r._count.socialAccounts,
+  }));
+
   res.json({
-    data: rows,
+    data,
     pagination: { page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
   });
 });

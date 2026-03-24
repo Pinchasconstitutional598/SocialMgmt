@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "@jest/globals";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import { resetMetaGraphFetchStateForTests } from "./metaApiFetch";
 import { exchangeLongLivedUserToken, MetaApiError, publishFacebookPagePost } from "./metaGraph";
 
 const GRAPH = `https://graph.facebook.com/${process.env.GRAPH_API_VERSION ?? "v20.0"}`;
@@ -13,6 +14,7 @@ beforeAll(() => {
 
 afterEach(() => {
   msw.resetHandlers();
+  resetMetaGraphFetchStateForTests();
 });
 
 afterAll(() => {

@@ -1,3 +1,5 @@
+import { metaGraphFetch } from "./metaApiFetch";
+
 const GRAPH_VERSION = "v21.0";
 const GRAPH = `https://graph.facebook.com/${GRAPH_VERSION}`;
 
@@ -34,7 +36,7 @@ export async function exchangeCodeForShortLivedToken(code: string, redirectUri: 
     code,
   });
 
-  const res = await fetch(`${GRAPH}/oauth/access_token?${params.toString()}`);
+  const res = await metaGraphFetch(`${GRAPH}/oauth/access_token?${params.toString()}`);
   const data = (await res.json()) as TokenResponse & { error?: { message: string } };
   if (!res.ok || data.error) {
     throw new Error(data.error?.message ?? `Facebook token error: ${res.status}`);
@@ -54,7 +56,7 @@ export async function exchangeShortLivedForLongLivedUserToken(shortLivedUserToke
     fb_exchange_token: shortLivedUserToken,
   });
 
-  const res = await fetch(`${GRAPH}/oauth/access_token?${params.toString()}`);
+  const res = await metaGraphFetch(`${GRAPH}/oauth/access_token?${params.toString()}`);
   const data = (await res.json()) as TokenResponse & { error?: { message: string } };
   if (!res.ok || data.error) {
     throw new Error(data.error?.message ?? `Facebook long-lived error: ${res.status}`);
@@ -72,7 +74,7 @@ export type PageAccount = {
 export async function fetchUserPages(longLivedUserToken: string): Promise<PageAccount[]> {
   const fields = "id,name,access_token,instagram_business_account{id}";
   const url = `${GRAPH}/me/accounts?fields=${encodeURIComponent(fields)}&access_token=${encodeURIComponent(longLivedUserToken)}`;
-  const res = await fetch(url);
+  const res = await metaGraphFetch(url);
   const data = (await res.json()) as {
     data?: PageAccount[];
     error?: { message: string };

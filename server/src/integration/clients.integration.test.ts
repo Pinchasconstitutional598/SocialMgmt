@@ -62,6 +62,44 @@ describe("API integracyjne — /api/clients", () => {
 
     expect(res.status).toBe(401);
   });
+
+  it("GET /api/clients?page=&pageSize= zwraca slice i pagination (LIMIT/OFFSET po stronie MySQL)", async () => {
+    const token = `pagi-${Date.now()}`;
+    for (let i = 0; i < 6; i++) {
+      await request(app)
+        .post("/api/clients")
+        .set(authHeaders)
+        .send({
+          name: `Pag Klient ${i}`,
+          email: `${token}-${i}@integration.test`,
+          status: "active",
+        });
+    }
+
+    const q = (page: string, pageSize: string) =>
+      `/api/clients?search=${encodeURIComponent(token)}&page=${page}&pageSize=${pageSize}`;
+
+    // API utrzymuje pageSize w [5, 100] — strona musi mieć co najmniej 5 wierszy, żeby testować str. 2.
+    const page1 = await request(app).get(q("1", "5")).set(authHeaders);
+    expect(page1.status).toBe(200);
+    expect(page1.body.data).toHaveLength(5);
+    expect(page1.body.pagination).toMatchObject({
+      page: 1,
+      pageSize: 5,
+      total: 6,
+      totalPages: 2,
+    });
+
+    const page2 = await request(app).get(q("2", "5")).set(authHeaders);
+    expect(page2.status).toBe(200);
+    expect(page2.body.data).toHaveLength(1);
+    expect(page2.body.pagination).toMatchObject({
+      page: 2,
+      pageSize: 5,
+      total: 6,
+      totalPages: 2,
+    });
+  });
 });
 
 describe("SocialAccount — izolacja client_id (MySQL)", () => {

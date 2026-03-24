@@ -4,6 +4,8 @@ Monorepo aplikacji do zarządzania obecnością klientów w social media: integr
 
 ## Podgląd
 
+Poniższy zrzut (`screenshot.webp`) pokazuje aktualny wygląd panelu (np. dashboard z KPI i wykresami lub inny widok aplikacji).
+
 ![Panel Social Management](screenshot.webp)
 
 ## Stack technologiczny

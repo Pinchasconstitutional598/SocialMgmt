@@ -7,6 +7,7 @@ import { ClientDetailPage } from "./pages/ClientDetailPage";
 import { ClientsPage } from "./pages/ClientsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
+import { AdSpendOverviewPage } from "./pages/AdSpendOverviewPage";
 import { MarketingPage } from "./pages/MarketingPage";
 import { SettingsPage } from "./pages/SettingsPage";
 
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/clients" element={<ClientsPage />} />
         <Route path="/clients/:id" element={<ClientDetailPage />} />
         <Route path="/marketing" element={<MarketingPage />} />
+        <Route path="/ad-spend" element={<AdSpendOverviewPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route
           path="/administration"

@@ -10,6 +10,7 @@ import {
   fetchUserPages,
   getFacebookScopes,
 } from "../services/facebook";
+import { META_CONNECTION } from "../services/metaConnectionStatus";
 
 const router = Router();
 
@@ -218,6 +219,11 @@ router.get("/facebook", async (req, res) => {
         });
       }
     }
+
+    await prisma.client.update({
+      where: { id: oauthState.clientId },
+      data: { metaConnectionStatus: META_CONNECTION.connected },
+    });
 
     res.redirect(`${base}/clients/${oauthState.clientId}?connected=1`);
   } catch (e) {

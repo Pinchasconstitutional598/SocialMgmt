@@ -7,6 +7,8 @@ import { authMiddleware, requireRole } from "./middleware/auth";
 import authRoutes from "./routes/auth";
 import clientMetaRoutes from "./routes/clientMeta";
 import clientsRoutes from "./routes/clients";
+import marketingRoutes from "./routes/marketing";
+import statsRoutes from "./routes/stats";
 import adminRoutes from "./routes/admin";
 
 /**
@@ -45,6 +47,8 @@ export function createApp() {
   app.use("/api/auth", authRoutes);
   app.use("/api/clients/:clientId/meta", clientMetaRoutes);
   app.use("/api/clients", clientsRoutes);
+  app.use("/api/marketing", marketingRoutes);
+  app.use("/api/stats", statsRoutes);
   app.use("/api/admin", adminRoutes);
 
   return app;

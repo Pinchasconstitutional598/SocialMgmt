@@ -11,10 +11,13 @@ datasource db {
 
 model Client {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
   name      String
   email     String   @unique
   industry  String?
   status    String
+  // Połączenie z Meta: unknown | connected | expired (błąd autoryzacji API, np. kod 190)
+  metaConnectionStatus String @default("unknown") @map("meta_connection_status")
 
   socialAccounts SocialAccount[]
   adAccounts     AdAccount[]

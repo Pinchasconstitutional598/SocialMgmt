@@ -1,3 +1,5 @@
+import { metaGraphFetch } from "./metaApiFetch";
+
 function graphBaseUrl(): string {
   const v = process.env.GRAPH_API_VERSION ?? "v20.0";
   return `https://graph.facebook.com/${v}`;
@@ -28,7 +30,7 @@ function buildUrl(path: string, params: Record<string, string | number | undefin
 }
 
 async function graphJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, init);
+  const res = await metaGraphFetch(url, init);
   const text = await res.text();
   let parsed: unknown = null;
   if (text) {

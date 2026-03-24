@@ -17,6 +17,7 @@ import {
   replyToFacebookComment,
   replyToInstagramComment,
 } from "../services/metaGraph";
+import { markClientMetaConnectionConnected, markClientMetaConnectionExpired } from "../services/metaConnectionStatus";
 import { listCampaigns, setCampaignStatus } from "../services/marketingCampaigns";
 
 const router = Router({ mergeParams: true });
@@ -27,9 +28,12 @@ function clientIdParam(req: Request): number {
   return Number(id);
 }
 
-function sendMetaError(res: Response, e: unknown) {
+async function sendMetaError(res: Response, e: unknown, clientId?: number) {
   if (e instanceof MetaApiError) {
     if (e.tokenExpired) {
+      if (clientId != null) {
+        await markClientMetaConnectionExpired(clientId);
+      }
       res.status(401).json({
         error: "Token Meta wygasł lub jest nieprawidłowy. Ponów autoryzację Facebook/Instagram.",
         code: "TOKEN_EXPIRED",
@@ -107,14 +111,19 @@ router.get("/social-stats", async (req, res) => {
           });
         }
       } catch (e) {
-        sendMetaError(res, e);
+        await sendMetaError(res, e, clientId);
         return;
       }
     }
 
+    const hadToken = client.socialAccounts.some((sa) => sa.accessToken);
+    if (hadToken && cards.length > 0) {
+      await markClientMetaConnectionConnected(clientId);
+    }
+
     res.json({ cards });
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -154,7 +163,7 @@ router.get("/feed", async (req, res) => {
     }
     res.json({ facebook, instagram });
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -180,7 +189,7 @@ router.get("/comments", async (req, res) => {
     const comments = await getObjectComments(objectId, token, 50);
     res.json({ data: comments.data ?? [] });
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -216,7 +225,7 @@ router.post("/comment", async (req, res) => {
       res.status(400).json({ error: "platform musi być facebook lub instagram" });
     }
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -242,7 +251,7 @@ router.delete("/comment/:commentId", async (req, res) => {
     const out = await deleteComment(commentId, token);
     res.json(out);
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -298,7 +307,7 @@ router.post("/publish", async (req, res) => {
       res.status(400).json({ error: "Nieobsługiwana platforma" });
     }
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -328,7 +337,7 @@ router.get("/campaigns", async (req, res) => {
     );
     res.json({ campaigns: active, adAccountId: ad.adAccountId });
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
@@ -356,7 +365,7 @@ router.patch("/campaigns/:campaignId", async (req, res) => {
     await setCampaignStatus(campaignId, fbToken, status);
     res.json({ ok: true });
   } catch (e) {
-    sendMetaError(res, e);
+    await sendMetaError(res, e, clientId);
   }
 });
 
