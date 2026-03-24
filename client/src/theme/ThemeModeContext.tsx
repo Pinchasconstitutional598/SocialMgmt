@@ -1,13 +1,7 @@
+/* eslint-disable react-refresh/only-export-components -- moduł kontekstu: Provider + hook useThemeMode */
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import type { PaletteMode } from "@mui/material";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 type ThemeModeContextValue = { mode: PaletteMode; toggleMode: () => void };
 
@@ -44,9 +38,7 @@ export function ThemeModeProvider({ children }: { children: ReactNode }) {
           mode,
           primary: { main: "#1976d2" },
           secondary: { main: "#9c27b0" },
-          ...(mode === "dark"
-            ? { background: { default: "#0d1117", paper: "#161b22" } }
-            : {}),
+          ...(mode === "dark" ? { background: { default: "#0d1117", paper: "#161b22" } } : {}),
         },
       }),
     [mode],

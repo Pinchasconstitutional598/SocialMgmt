@@ -1,14 +1,6 @@
 import { Alert, Box, Paper, Typography } from "@mui/material";
 import { type ComponentType, useEffect, useState } from "react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { apiJson } from "../lib/api";
 
 type Point = { date: string; spend: number; label: string };
@@ -59,8 +51,8 @@ export function AdSpendOverviewPage() {
         Ad Spend Overview
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 2 }}>
-        Sumaryczny wydatek z ostatnich 7 dni (Marketing API) dla wszystkich kont reklamowych ze statusem „active” w bazie.
-        Kwoty są w walucie konta Meta (nieznormalizowane).
+        Sumaryczny wydatek z ostatnich 7 dni (Marketing API) dla wszystkich kont reklamowych ze statusem „active” w
+        bazie. Kwoty są w walucie konta Meta (nieznormalizowane).
       </Typography>
 
       {loading && <Typography>Ładowanie…</Typography>}

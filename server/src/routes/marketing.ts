@@ -51,7 +51,9 @@ router.get("/ad-spend-overview", async (_req, res) => {
   for (const ad of active) {
     const token = facebookTokenForClient(ad.client.socialAccounts);
     if (!token) {
-      errors.push(`Konto act_${ad.adAccountId.replace(/^act_/, "")} (klient: ${ad.client.name}): brak tokenu Facebook.`);
+      errors.push(
+        `Konto act_${ad.adAccountId.replace(/^act_/, "")} (klient: ${ad.client.name}): brak tokenu Facebook.`,
+      );
       continue;
     }
     try {

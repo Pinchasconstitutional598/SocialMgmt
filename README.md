@@ -10,14 +10,14 @@ Poniższy zrzut (`screenshot.webp`) pokazuje aktualny wygląd panelu (np. dashbo
 
 ## Stack technologiczny
 
-| Warstwa               | Technologie                                                                                        |
-| --------------------- | -------------------------------------------------------------------------------------------------- |
-| **Frontend**          | React 19, Vite, TypeScript, Material UI (MUI), React Router, React Hook Form, Zod, MUI X Data Grid |
-| **Backend**           | Node.js, Express 5, TypeScript, Prisma ORM                                                         |
-| **Baza danych**       | MySQL 8                                                                                            |
-| **Infra (lokalnie)**  | Docker Compose (kontener MySQL)                                                                    |
-| **Auth / integracje** | JWT (panel), OAuth Meta, Facebook Graph API, Marketing API                                         |
-| **Testy / jakość**    | Vitest, Jest + MSW, Playwright (E2E), ESLint (client), Prettier                                    |
+| Warstwa               | Technologie                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Frontend**          | React 19, Vite, TypeScript, Material UI (MUI), Tiptap, React Router, React Hook Form, Zod, MUI X Data Grid, Recharts |
+| **Backend**           | Node.js, Express 5, TypeScript, Prisma ORM                                                                           |
+| **Baza danych**       | MySQL 8                                                                                                              |
+| **Infra (lokalnie)**  | Docker Compose (kontener MySQL)                                                                                      |
+| **Auth / integracje** | JWT (panel), OAuth Meta, Facebook Graph API, Marketing API                                                           |
+| **Testy / jakość**    | Vitest, Jest + MSW, Playwright (E2E), ESLint (client), Prettier                                                      |
 
 Struktura katalogów:
 
@@ -109,7 +109,13 @@ npm run dev:client   # Vite — zwykle http://localhost:5173
 npm run dev:server   # API — zwykle http://localhost:3001
 ```
 
-Frontend proxy przekierowuje `/api` na backend (patrz `client/vite.config.ts`).
+Frontend proxy przekierowuje **`/api`** oraz **`/uploads`** na backend (patrz `client/vite.config.ts`), żeby w dev wygodnie ładować pliki z API pod tym samym hostem co Vite.
+
+### Edytor treści i wgrywanie obrazów
+
+- **SocialEditor** (Tiptap) w zakładce treści klienta: formatowanie tekstu (m.in. nagłówki, listy, cytat, link, podkreślenie), pasek narzędzi w układzie **Stack** z **Divider** i **ToggleButton**; treść jest dostępna jako zwykły tekst lub HTML (zależnie od użycia w kodzie).
+- **MediaInput** przy publikacji posta: wybór między **wgraniem pliku** (JPG/PNG, max 5 MB) a **adresem URL**; podgląd obrazu. Wymagany publiczny URL obrazu dla Instagram — lokalny `localhost` nie zadziała w produkcji wobec API Meta.
+- **Backend:** `POST /api/media/upload` (JWT), **Multer**, zapis w `server/public/uploads/`, statyczne serwowanie pod **`/uploads`**. Pełny URL pliku budowany jest z **`BACKEND_URL`** w `server/.env` (szablon: `server/.env.example`).
 
 ## Build produkcyjny
 
@@ -229,6 +235,7 @@ Równoważnie: `npm run db:studio -w server` albo `cd server && npx prisma studi
 - Większość tras pod `/api/clients` i `/api/clients/:id/meta` wymaga nagłówka **`Authorization: Bearer <JWT>`** (panel: role ADMINISTRATOR lub MARKETING).
 - **`/api/admin/*`** — wyłącznie rola **ADMINISTRATOR**.
 - **`GET /api/health`** — publiczny (np. healthcheck / orchestracja).
+- **`POST /api/media/upload`** — **JWT** (panel); wgrywanie obrazów JPG/PNG (max 5 MB); zwraca pełny URL pod **`/uploads/…`** (szczegóły w sekcji „Edytor treści i wgrywanie obrazów” powyżej).
 - **`GET /api/db-check`** — **JWT + rola ADMINISTRATOR** (diagnostyka bazy; nie udostępniaj publicznie).
 - **OAuth Meta** (`/api/auth/*`, w tym redirect callback) — publiczne tylko tam, gdzie wymaga tego przepływ przeglądarki; logowanie do panelu (`POST /api/auth/login` itd.) nie wymaga wcześniejszego JWT.
 

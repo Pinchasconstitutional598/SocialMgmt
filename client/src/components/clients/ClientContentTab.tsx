@@ -14,6 +14,8 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import { ApiError, apiJson } from "../../lib/api";
+import { MediaInput } from "../MediaInput";
+import { SocialEditor } from "../SocialEditor";
 import { FeedList, type FeedItem } from "./FeedList";
 
 type CommentRow = {
@@ -209,21 +211,28 @@ export function ClientContentTab({ clientId, onMetaAuthRequired }: Props) {
           <MenuItem value="facebook">Facebook</MenuItem>
           <MenuItem value="instagram">Instagram (wymaga obrazu)</MenuItem>
         </TextField>
-        <TextField
-          label="Treść"
-          value={publishMsg}
-          onChange={(e) => setPublishMsg(e.target.value)}
-          sx={{ flex: 1, minWidth: 200 }}
-          multiline
-          maxRows={3}
-        />
-        <TextField
-          label="URL obrazu (HTTPS, publiczny)"
+        <Box sx={{ flex: 1, minWidth: 280 }}>
+          <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
+            Treść
+          </Typography>
+          <SocialEditor
+            value={publishMsg}
+            onChange={({ text }) => setPublishMsg(text)}
+            disabled={publishing}
+            minHeight="120px"
+          />
+        </Box>
+        <MediaInput
+          label="Obraz (wymagany na Instagram)"
           value={publishImage}
-          onChange={(e) => setPublishImage(e.target.value)}
-          sx={{ flex: 1, minWidth: 200 }}
+          onChange={setPublishImage}
+          disabled={publishing}
         />
-        <Button variant="contained" onClick={() => void publish()} disabled={publishing || !publishMsg.trim()}>
+        <Button
+          variant="contained"
+          onClick={() => void publish()}
+          disabled={publishing || !publishMsg.trim() || (publishPlatform === "instagram" && !publishImage.trim())}
+        >
           Opublikuj
         </Button>
       </Box>

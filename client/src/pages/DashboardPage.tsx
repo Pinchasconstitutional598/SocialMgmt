@@ -29,7 +29,18 @@ import {
 } from "@mui/material";
 import { type ComponentType, useCallback, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { apiFetch, apiJson } from "../lib/api";
 
 type DashboardPayload = {
@@ -118,7 +129,9 @@ export function DashboardPage() {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap", gap: 2 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap", gap: 2 }}
+      >
         <Typography variant="h5">Dashboard</Typography>
         <Typography variant="caption" color="text.secondary">
           {data?.cachedAt ? `Dane z cache: ${new Date(data.cachedAt).toLocaleString("pl-PL")}` : ""}
@@ -154,102 +167,99 @@ export function DashboardPage() {
             }}
           >
             <Card variant="outlined" sx={{ height: "100%" }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                    <PeopleIcon color="primary" />
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Klienci
-                    </Typography>
-                  </Box>
-                  <Typography variant="h4">{data.summary.clientsTotal}</Typography>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 1 }}>
-                    {trend != null && (
-                      <>
-                        {trendUp ? (
-                          <ArrowUpwardIcon fontSize="small" color="success" />
-                        ) : (
-                          <ArrowDownwardIcon fontSize="small" color="error" />
-                        )}
-                        <Typography
-                          variant="body2"
-                          color={trendUp ? "success.main" : "error.main"}
-                        >
-                          {trendUp ? "+" : ""}
-                          {trend}% vs poprzedni miesiąc
-                        </Typography>
-                      </>
-                    )}
-                    {trend == null && (
-                      <Typography variant="caption" color="text.secondary">
-                        Brak danych trendu
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <PeopleIcon color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Klienci
+                  </Typography>
+                </Box>
+                <Typography variant="h4">{data.summary.clientsTotal}</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 1 }}>
+                  {trend != null && (
+                    <>
+                      {trendUp ? (
+                        <ArrowUpwardIcon fontSize="small" color="success" />
+                      ) : (
+                        <ArrowDownwardIcon fontSize="small" color="error" />
+                      )}
+                      <Typography variant="body2" color={trendUp ? "success.main" : "error.main"}>
+                        {trendUp ? "+" : ""}
+                        {trend}% vs poprzedni miesiąc
                       </Typography>
-                    )}
-                  </Box>
-                </CardContent>
-              </Card>
-            <Card variant="outlined" sx={{ height: "100%" }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                    <CampaignIcon color="primary" />
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Aktywne kampanie
-                    </Typography>
-                  </Box>
-                  <Typography variant="h4">{data.summary.activeCampaignsTotal}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Suma ze wszystkich kont Marketing API (ACTIVE)
-                  </Typography>
-                </CardContent>
-              </Card>
-            <Card variant="outlined" sx={{ height: "100%" }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                    <MonetizationOnIcon color="primary" />
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Wydatek (30 dni)
-                    </Typography>
-                  </Box>
-                  <Typography variant="h4">
-                    {data.summary.totalSpend30d.toLocaleString("pl-PL", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Waluta wg konta Meta
-                  </Typography>
-                </CardContent>
-              </Card>
-            <Card variant="outlined" sx={{ height: "100%" }}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                    <SettingsEthernetIcon color="primary" />
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Połączenia Meta
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-                    <Chip
-                      icon={<CheckCircleIcon />}
-                      label={`OK: ${data.summary.connections.ok}`}
-                      color="success"
-                      size="small"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<ErrorOutlineIcon />}
-                      label={`Wygasłe: ${data.summary.connections.expired}`}
-                      color={data.summary.connections.expired > 0 ? "error" : "default"}
-                      size="small"
-                      variant="outlined"
-                    />
+                    </>
+                  )}
+                  {trend == null && (
                     <Typography variant="caption" color="text.secondary">
-                      Nieznane: {data.summary.connections.unknown}
+                      Brak danych trendu
                     </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Box>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+            <Card variant="outlined" sx={{ height: "100%" }}>
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <CampaignIcon color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Aktywne kampanie
+                  </Typography>
+                </Box>
+                <Typography variant="h4">{data.summary.activeCampaignsTotal}</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Suma ze wszystkich kont Marketing API (ACTIVE)
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card variant="outlined" sx={{ height: "100%" }}>
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <MonetizationOnIcon color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Wydatek (30 dni)
+                  </Typography>
+                </Box>
+                <Typography variant="h4">
+                  {data.summary.totalSpend30d.toLocaleString("pl-PL", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Waluta wg konta Meta
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card variant="outlined" sx={{ height: "100%" }}>
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                  <SettingsEthernetIcon color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Połączenia Meta
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                  <Chip
+                    icon={<CheckCircleIcon />}
+                    label={`OK: ${data.summary.connections.ok}`}
+                    color="success"
+                    size="small"
+                    variant="outlined"
+                  />
+                  <Chip
+                    icon={<ErrorOutlineIcon />}
+                    label={`Wygasłe: ${data.summary.connections.expired}`}
+                    color={data.summary.connections.expired > 0 ? "error" : "default"}
+                    size="small"
+                    variant="outlined"
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    Nieznane: {data.summary.connections.unknown}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
 
           <Box
             sx={{
@@ -263,113 +273,114 @@ export function DashboardPage() {
               },
             }}
           >
-            <Paper sx={{ p: 2, height: 420, flex: { xs: "1 1 100%", md: "2 1 0" },
-                minWidth: { md: 0 },
-              }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Wydatki reklamowe (14 dni)
-                </Typography>
-                {data.spend14d.length === 0 ? (
-                  <Typography color="text.secondary">Brak danych wydatków.</Typography>
+            <Paper sx={{ p: 2, height: 420, flex: { xs: "1 1 100%", md: "2 1 0" }, minWidth: { md: 0 } }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Wydatki reklamowe (14 dni)
+              </Typography>
+              {data.spend14d.length === 0 ? (
+                <Typography color="text.secondary">Brak danych wydatków.</Typography>
+              ) : (
+                <Container width="100%" height="90%">
+                  <LineChartC data={data.spend14d} margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
+                    <GridC strokeDasharray="3 3" stroke={theme.palette.divider} />
+                    <AxisX dataKey="label" tick={{ fontSize: 11 }} />
+                    <AxisY
+                      tick={{ fontSize: 11 }}
+                      tickFormatter={(v: number) =>
+                        typeof v === "number" ? v.toLocaleString("pl-PL", { maximumFractionDigits: 0 }) : String(v)
+                      }
+                    />
+                    <Tip contentStyle={{ backgroundColor: theme.palette.background.paper }} />
+                    <LineEl
+                      type="monotone"
+                      dataKey="spend"
+                      stroke={primary}
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      name="Wydatek"
+                    />
+                  </LineChartC>
+                </Container>
+              )}
+            </Paper>
+            <Paper
+              sx={{ p: 2, height: 420, overflow: "auto", flex: { xs: "1 1 100%", md: "1 1 0" }, minWidth: { md: 280 } }}
+            >
+              <Typography variant="subtitle1" gutterBottom>
+                Wymaga uwagi
+              </Typography>
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
+                Tokeny, CPC, komentarze
+              </Typography>
+              <Divider sx={{ mb: 1 }} />
+              <Typography variant="subtitle2" color="error" gutterBottom>
+                Wygasły token / OAuth
+              </Typography>
+              <List dense disablePadding>
+                {data.needsAttention.expiredTokens.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Brak
+                  </Typography>
                 ) : (
-                  <Container width="100%" height="90%">
-                    <LineChartC data={data.spend14d} margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
-                      <GridC strokeDasharray="3 3" stroke={theme.palette.divider} />
-                      <AxisX dataKey="label" tick={{ fontSize: 11 }} />
-                      <AxisY
-                        tick={{ fontSize: 11 }}
-                        tickFormatter={(v: number) =>
-                          typeof v === "number" ? v.toLocaleString("pl-PL", { maximumFractionDigits: 0 }) : String(v)
-                        }
-                      />
-                      <Tip contentStyle={{ backgroundColor: theme.palette.background.paper }} />
-                      <LineEl
-                        type="monotone"
-                        dataKey="spend"
-                        stroke={primary}
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                        name="Wydatek"
-                      />
-                    </LineChartC>
-                  </Container>
-                )}
-              </Paper>
-            <Paper sx={{ p: 2, height: 420, overflow: "auto", flex: { xs: "1 1 100%", md: "1 1 0" }, minWidth: { md: 280 } }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Wymaga uwagi
-                </Typography>
-                <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 1 }}>
-                  Tokeny, CPC, komentarze
-                </Typography>
-                <Divider sx={{ mb: 1 }} />
-                <Typography variant="subtitle2" color="error" gutterBottom>
-                  Wygasły token / OAuth
-                </Typography>
-                <List dense disablePadding>
-                  {data.needsAttention.expiredTokens.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Brak
-                    </Typography>
-                  ) : (
-                    data.needsAttention.expiredTokens.map((c) => (
-                      <ListItem key={c.clientId} disableGutters secondaryAction={
+                  data.needsAttention.expiredTokens.map((c) => (
+                    <ListItem
+                      key={c.clientId}
+                      disableGutters
+                      secondaryAction={
                         <Button size="small" onClick={() => void startReauth(c.clientId)}>
                           Napraw
                         </Button>
-                      }>
-                        <ListItemText primary={c.clientName} secondary={`ID ${c.clientId}`} />
-                      </ListItem>
-                    ))
-                  )}
-                </List>
-                <Divider sx={{ my: 1 }} />
-                <Typography variant="subtitle2" color="warning.main" gutterBottom>
-                  Wysoki CPC (kampanie)
-                </Typography>
-                <List dense disablePadding>
-                  {data.needsAttention.highCpcCampaigns.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Brak
-                    </Typography>
-                  ) : (
-                    data.needsAttention.highCpcCampaigns.map((c) => (
-                      <ListItem key={c.campaignId} disablePadding>
-                        <ListItemText
-                          primary={c.name}
-                          secondary={`${c.clientName} · CPC ${c.cpc.toFixed(2)}`}
-                        />
-                      </ListItem>
-                    ))
-                  )}
-                </List>
-                <Divider sx={{ my: 1 }} />
-                <Typography variant="subtitle2" gutterBottom>
-                  Ostatnie komentarze
-                </Typography>
-                <List dense disablePadding>
-                  {data.needsAttention.recentComments.length === 0 ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Brak
-                    </Typography>
-                  ) : (
-                    data.needsAttention.recentComments.map((c, i) => (
-                      <ListItem key={i} disablePadding sx={{ alignItems: "flex-start" }}>
-                        <ListItemText
-                          primary={
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
-                              <span>{c.clientName}</span>
-                              <Chip label={c.platform} size="small" variant="outlined" />
-                              {c.possiblyNegative && <Chip label="Sentyment?" size="small" color="warning" />}
-                            </Box>
-                          }
-                          secondary={c.text}
-                        />
-                      </ListItem>
-                    ))
-                  )}
-                </List>
-              </Paper>
+                      }
+                    >
+                      <ListItemText primary={c.clientName} secondary={`ID ${c.clientId}`} />
+                    </ListItem>
+                  ))
+                )}
+              </List>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="subtitle2" color="warning.main" gutterBottom>
+                Wysoki CPC (kampanie)
+              </Typography>
+              <List dense disablePadding>
+                {data.needsAttention.highCpcCampaigns.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Brak
+                  </Typography>
+                ) : (
+                  data.needsAttention.highCpcCampaigns.map((c) => (
+                    <ListItem key={c.campaignId} disablePadding>
+                      <ListItemText primary={c.name} secondary={`${c.clientName} · CPC ${c.cpc.toFixed(2)}`} />
+                    </ListItem>
+                  ))
+                )}
+              </List>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="subtitle2" gutterBottom>
+                Ostatnie komentarze
+              </Typography>
+              <List dense disablePadding>
+                {data.needsAttention.recentComments.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Brak
+                  </Typography>
+                ) : (
+                  data.needsAttention.recentComments.map((c, i) => (
+                    <ListItem key={i} disablePadding sx={{ alignItems: "flex-start" }}>
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                            <span>{c.clientName}</span>
+                            <Chip label={c.platform} size="small" variant="outlined" />
+                            {c.possiblyNegative && <Chip label="Sentyment?" size="small" color="warning" />}
+                          </Box>
+                        }
+                        secondary={c.text}
+                      />
+                    </ListItem>
+                  ))
+                )}
+              </List>
+            </Paper>
           </Box>
 
           <Paper sx={{ p: 2, mb: 2 }}>
@@ -380,10 +391,7 @@ export function DashboardPage() {
               <Typography color="text.secondary">Brak danych — sprawdź tokeny i konta społecznościowe.</Typography>
             ) : (
               <Container width="100%" height={320}>
-                <BarChartC
-                  data={data.postsByWeekday}
-                  margin={{ top: 8, right: 16, left: 8, bottom: 8 }}
-                >
+                <BarChartC data={data.postsByWeekday} margin={{ top: 8, right: 16, left: 8, bottom: 8 }}>
                   <GridC strokeDasharray="3 3" stroke={theme.palette.divider} />
                   <AxisX dataKey="weekday" tick={{ fontSize: 12 }} />
                   <AxisY allowDecimals={false} tick={{ fontSize: 12 }} />

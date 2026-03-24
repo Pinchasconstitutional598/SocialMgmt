@@ -2,6 +2,8 @@ import "dotenv/config";
 import { PanelRole } from "@prisma/client";
 import cors from "cors";
 import express from "express";
+import fs from "fs";
+import path from "path";
 import { prisma } from "./lib/prisma";
 import { authMiddleware, requireRole } from "./middleware/auth";
 import authRoutes from "./routes/auth";
@@ -10,6 +12,7 @@ import clientsRoutes from "./routes/clients";
 import marketingRoutes from "./routes/marketing";
 import statsRoutes from "./routes/stats";
 import adminRoutes from "./routes/admin";
+import mediaRoutes from "./routes/media";
 
 /**
  * Aplikacja Express bez nasłuchiwania na porcie — używana w testach integracyjnych (Supertest).
@@ -24,6 +27,10 @@ export function createApp() {
     }),
   );
   app.use(express.json());
+
+  const uploadsPublic = path.join(process.cwd(), "public", "uploads");
+  fs.mkdirSync(uploadsPublic, { recursive: true });
+  app.use("/uploads", express.static(uploadsPublic));
 
   /** Publiczny healthcheck (np. load balancer / Playwright); bez danych wrażliwych. */
   app.get("/api/health", (_req, res) => {
@@ -44,6 +51,7 @@ export function createApp() {
     }
   });
 
+  app.use("/api/media", mediaRoutes);
   app.use("/api/auth", authRoutes);
   app.use("/api/clients/:clientId/meta", clientMetaRoutes);
   app.use("/api/clients", clientsRoutes);

@@ -1,10 +1,5 @@
 import { prisma } from "../lib/prisma";
-import {
-  getAdAccountDailySpend,
-  getCampaignCpcInsight,
-  listCampaigns,
-  type CampaignRow,
-} from "./marketingCampaigns";
+import { getAdAccountDailySpend, getCampaignCpcInsight, listCampaigns, type CampaignRow } from "./marketingCampaigns";
 import { getInstagramMedia, getObjectComments, getPageFeed, MetaApiError } from "./metaGraph";
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
@@ -99,13 +94,7 @@ async function buildDashboardPayload(): Promise<DashboardPayload> {
   const startLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const endLastMonth = startThisMonth;
 
-  const [
-    clientsTotal,
-    createdThisMonth,
-    createdLastMonth,
-    clientsWithSocial,
-    expiredTokenClients,
-  ] = await Promise.all([
+  const [clientsTotal, createdThisMonth, createdLastMonth, clientsWithSocial, expiredTokenClients] = await Promise.all([
     prisma.client.count(),
     prisma.client.count({ where: { createdAt: { gte: startThisMonth } } }),
     prisma.client.count({
@@ -137,9 +126,7 @@ async function buildDashboardPayload(): Promise<DashboardPayload> {
 
   let clientsTrendPercent: number | null = null;
   if (createdLastMonth > 0) {
-    clientsTrendPercent = Math.round(
-      ((createdThisMonth - createdLastMonth) / createdLastMonth) * 100,
-    );
+    clientsTrendPercent = Math.round(((createdThisMonth - createdLastMonth) / createdLastMonth) * 100);
   } else if (createdThisMonth > 0) {
     clientsTrendPercent = 100;
   }
@@ -185,10 +172,7 @@ async function buildDashboardPayload(): Promise<DashboardPayload> {
         spend30ByDate.set(date, (spend30ByDate.get(date) ?? 0) + spend);
         sumClient += spend;
       }
-      spend30ByClient.set(
-        ad.clientId,
-        (spend30ByClient.get(ad.clientId) ?? 0) + sumClient,
-      );
+      spend30ByClient.set(ad.clientId, (spend30ByClient.get(ad.clientId) ?? 0) + sumClient);
 
       const d14 = await getAdAccountDailySpend(ad.adAccountId, token, "last_14d");
       for (const { date, spend } of d14) {
@@ -203,8 +187,7 @@ async function buildDashboardPayload(): Promise<DashboardPayload> {
     }
   }
 
-  const totalSpend30d =
-    Math.round(Array.from(spend30ByDate.values()).reduce((a, b) => a + b, 0) * 100) / 100;
+  const totalSpend30d = Math.round(Array.from(spend30ByDate.values()).reduce((a, b) => a + b, 0) * 100) / 100;
 
   const spend14d = Array.from(spend14ByDate.entries())
     .sort(([a], [b]) => a.localeCompare(b))
@@ -237,11 +220,7 @@ async function buildDashboardPayload(): Promise<DashboardPayload> {
           const ins = await getCampaignCpcInsight(c.id, token);
           const cpc = ins.cpc;
           const clicks = ins.clicks ?? 0;
-          if (
-            cpc != null &&
-            cpc >= HIGH_CPC_THRESHOLD &&
-            clicks >= MIN_CLICKS_FOR_CPC
-          ) {
+          if (cpc != null && cpc >= HIGH_CPC_THRESHOLD && clicks >= MIN_CLICKS_FOR_CPC) {
             highCpcCampaigns.push({
               campaignId: c.id,
               name: c.name,
